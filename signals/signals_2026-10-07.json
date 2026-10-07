@@ -1,0 +1,62 @@
+{
+  "scan_date": "2026-10-07",
+  "scan_timestamp": "2026-10-07T14:21:28.205895",
+  "filter": {
+    "buy_z_max": -1.8,
+    "sell_z_min": 1.5,
+    "max_lag": 2,
+    "days_lookback": 3
+  },
+  "summary": {
+    "total_signals": 5,
+    "buy_signals": 3,
+    "sell_signals": 2
+  },
+  "signals": [
+    {
+      "symbol": "6040",
+      "name_ar": "تبوك الزراعية",
+      "type": "BUY",
+      "date": "2026-10-04",
+      "price": 36.76,
+      "z_osc": -2.562,
+      "lag": 0
+    },
+    {
+      "symbol": "6012",
+      "name_ar": "ريدان",
+      "type": "SELL",
+      "date": "2026-10-05",
+      "price": 20.0,
+      "z_osc": 2.624,
+      "lag": 1
+    },
+    {
+      "symbol": "1321",
+      "name_ar": "أنابيب الشرق",
+      "type": "BUY",
+      "date": "2026-10-04",
+      "price": 170.2,
+      "z_osc": -2.924,
+      "lag": 2
+    },
+    {
+      "symbol": "6050",
+      "name_ar": "الأسماك",
+      "type": "BUY",
+      "date": "2026-10-04",
+      "price": 46.3,
+      "z_osc": -2.267,
+      "lag": 2
+    },
+    {
+      "symbol": "4349",
+      "name_ar": "الإنماء ريت الفندقي",
+      "type": "SELL",
+      "date": "2026-10-05",
+      "price": 7.34,
+      "z_osc": 1.581,
+      "lag": 0
+    }
+  ]
+}
