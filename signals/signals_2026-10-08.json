@@ -1,0 +1,62 @@
+{
+  "scan_date": "2026-10-08",
+  "scan_timestamp": "2026-10-08T19:01:45.915280",
+  "filter": {
+    "buy_z_max": -1.8,
+    "sell_z_min": 1.5,
+    "max_lag": 2,
+    "days_lookback": 3
+  },
+  "summary": {
+    "total_signals": 5,
+    "buy_signals": 0,
+    "sell_signals": 5
+  },
+  "signals": [
+    {
+      "symbol": "6012",
+      "name_ar": "ريدان",
+      "type": "SELL",
+      "date": "2026-10-05",
+      "price": 20.0,
+      "z_osc": 2.719,
+      "lag": 0
+    },
+    {
+      "symbol": "4349",
+      "name_ar": "الإنماء ريت الفندقي",
+      "type": "SELL",
+      "date": "2026-10-05",
+      "price": 7.34,
+      "z_osc": 2.081,
+      "lag": 0
+    },
+    {
+      "symbol": "4072",
+      "name_ar": "مجموعة إم بي سي",
+      "type": "SELL",
+      "date": "2026-10-06",
+      "price": 19.92,
+      "z_osc": 2.006,
+      "lag": 0
+    },
+    {
+      "symbol": "1834",
+      "name_ar": "سماسكو",
+      "type": "SELL",
+      "date": "2026-10-06",
+      "price": 5.54,
+      "z_osc": 1.685,
+      "lag": 0
+    },
+    {
+      "symbol": "4170",
+      "name_ar": "شمس",
+      "type": "SELL",
+      "date": "2026-10-06",
+      "price": 12.8,
+      "z_osc": 1.68,
+      "lag": 0
+    }
+  ]
+}
