@@ -11,6 +11,13 @@
         <header>
             <h1>📊 StochZ Scanner</h1>
             <p class="subtitle">إشارات التداول اليومية — السوق السعودي</p>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('today')">📅 اليوم</button>
+                <button class="tab" onclick="showTab('archive')">📚 الأرشيف</button>
+                <button class="tab" onclick="showTab('stats')">📊 إحصائيات</button>
+            </div>
+            
             <div class="last-update">
                 <span id="last-update">جاري التحميل...</span>
                 <button id="refresh-btn" onclick="loadData()">🔄 تحديث</button>
@@ -18,15 +25,30 @@
         </header>
 
         <main>
-            <section class="signals-section">
-                <h2>🟢 إشارات الشراء <span id="buy-count" class="count">0</span></h2>
-                <div id="buy-list" class="signals-list"></div>
-            </section>
+            <!-- تبويب اليوم -->
+            <div id="tab-today" class="tab-content active">
+                <section class="signals-section">
+                    <h2>🟢 إشارات الشراء <span id="buy-count" class="count">0</span></h2>
+                    <div id="buy-list" class="signals-list"></div>
+                </section>
 
-            <section class="signals-section">
-                <h2>🔴 إشارات البيع <span id="sell-count" class="count">0</span></h2>
-                <div id="sell-list" class="signals-list"></div>
-            </section>
+                <section class="signals-section">
+                    <h2>🔴 إشارات البيع <span id="sell-count" class="count">0</span></h2>
+                    <div id="sell-list" class="signals-list"></div>
+                </section>
+            </div>
+            
+            <!-- تبويب الأرشيف -->
+            <div id="tab-archive" class="tab-content">
+                <div id="archive-list"></div>
+            </div>
+            
+            <!-- تبويب الإحصائيات -->
+            <div id="tab-stats" class="tab-content">
+                <div id="stats-content">
+                    <div class="empty-state">جاري التحميل...</div>
+                </div>
+            </div>
         </main>
 
         <footer>
