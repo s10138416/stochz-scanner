@@ -1,25 +1,18 @@
-// ═══════════════════════════════════════════════════════
-// StochZ Scanner - Frontend v2
-// ═══════════════════════════════════════════════════════
-
 const REPO_URL = 'https://raw.githubusercontent.com/s10138416/stochz-scanner/main/signals';
 let currentData = null;
-let archiveData = {};
 
-// ═══ تبويبات ═══
-function showTab(name) {
+function showTab(event, name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     
     event.target.classList.add('active');
     document.getElementById(`tab-${name}`).classList.add('active');
     
-    if (name === 'archive' && Object.keys(archiveData).length === 0) {
+    if (name === 'archive') {
         loadArchive();
     }
 }
 
-// ═══ تحميل البيانات الرئيسية ═══
 async function loadData() {
     const lastUpdateEl = document.getElementById('last-update');
     lastUpdateEl.textContent = '⏳ جاري التحميل...';
@@ -44,9 +37,7 @@ async function loadData() {
                     foundDate = dateStr;
                     break;
                 }
-            } catch (e) {
-                continue;
-            }
+            } catch (e) { continue; }
         }
         
         if (!data) throw new Error('لا توجد بيانات حديثة');
@@ -58,13 +49,12 @@ async function loadData() {
     } catch (error) {
         lastUpdateEl.textContent = `⚠️ ${error.message}`;
         document.getElementById('buy-list').innerHTML = 
-            '<div class="empty-state">لا توجد بيانات</div>';
+            '<div class="empty-state">لا توجد بيانات متاحة</div>';
         document.getElementById('sell-list').innerHTML = 
             '<div class="empty-state">حاول لاحقاً</div>';
     }
 }
 
-// ═══ عرض الإشارات ═══
 function renderSignals(data, date) {
     document.getElementById('last-update').textContent = `📅 آخر تحديث: ${date}`;
     
@@ -90,7 +80,6 @@ function renderSignals(data, date) {
     }
 }
 
-// ═══ بطاقة الإشارة ═══
 function createCard(signal, type) {
     const card = document.createElement('div');
     card.className = `signal-card ${type}`;
@@ -104,20 +93,15 @@ function createCard(signal, type) {
     const name = signal.name_ar || signal.name || signal.symbol;
     const price = signal.price || 0;
     
-    // حساب خطة التداول
-    const stopPct = 0.02;
-    const tp1Pct = 0.02;
-    const tp2Pct = 0.04;
-    
     let stopLoss, tp1, tp2;
     if (type === 'buy') {
-        stopLoss = (price * (1 - stopPct)).toFixed(2);
-        tp1 = (price * (1 + tp1Pct)).toFixed(2);
-        tp2 = (price * (1 + tp2Pct)).toFixed(2);
+        stopLoss = (price * 0.98).toFixed(2);
+        tp1 = (price * 1.02).toFixed(2);
+        tp2 = (price * 1.04).toFixed(2);
     } else {
-        stopLoss = (price * (1 + stopPct)).toFixed(2);
-        tp1 = (price * (1 - tp1Pct)).toFixed(2);
-        tp2 = (price * (1 - tp2Pct)).toFixed(2);
+        stopLoss = (price * 1.02).toFixed(2);
+        tp1 = (price * 0.98).toFixed(2);
+        tp2 = (price * 0.96).toFixed(2);
     }
     
     card.innerHTML = `
@@ -137,15 +121,15 @@ function createCard(signal, type) {
         </div>
         <div class="trade-plan">
             <div class="plan-item stop">
-                <span class="label">🛑 وقف الخسارة</span>
+                <span class="label">🛑 وقف</span>
                 <span class="value">${stopLoss}</span>
             </div>
             <div class="plan-item tp1">
-                <span class="label">🎯 الهدف 1 (+2%)</span>
+                <span class="label">🎯 هدف 1</span>
                 <span class="value">${tp1}</span>
             </div>
             <div class="plan-item tp2">
-                <span class="label">🎯 الهدف 2 (+4%)</span>
+                <span class="label">🎯 هدف 2</span>
                 <span class="value">${tp2}</span>
             </div>
         </div>
@@ -154,7 +138,6 @@ function createCard(signal, type) {
     return card;
 }
 
-// ═══ نسخ الرمز ═══
 function copySymbol(symbol) {
     navigator.clipboard.writeText(symbol).then(() => {
         showToast(`✅ تم نسخ: ${symbol}`);
@@ -174,28 +157,22 @@ function showToast(message) {
     setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-// ═══ الأرشيف ═══
 async function loadArchive() {
     const list = document.getElementById('archive-list');
     list.innerHTML = '<div class="empty-state">⏳ جاري التحميل...</div>';
     
     const today = new Date();
     const dates = [];
-    
     for (let i = 0; i < 30; i++) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
-        dates.push(dateStr);
+        dates.push(date.toISOString().split('T')[0]);
     }
     
     const results = await Promise.all(dates.map(async (dateStr) => {
         try {
             const response = await fetch(`${REPO_URL}/signals_${dateStr}.json?t=${Date.now()}`);
-            if (response.ok) {
-                const data = await response.json();
-                return { date: dateStr, data };
-            }
+            if (response.ok) return { date: dateStr, data: await response.json() };
         } catch (e) {}
         return null;
     }));
@@ -203,7 +180,7 @@ async function loadArchive() {
     const valid = results.filter(r => r !== null);
     
     if (valid.length === 0) {
-        list.innerHTML = '<div class="empty-state">لا يوجد أرشيف</div>';
+        list.innerHTML = '<div class="empty-state">لا يوجد أرشيف بعد</div>';
         return;
     }
     
@@ -216,7 +193,6 @@ async function loadArchive() {
         
         const el = document.createElement('div');
         el.className = 'archive-item';
-        el.onclick = () => showArchiveDetail(item.date, item.data);
         el.innerHTML = `
             <span class="archive-date">📅 ${item.date}</span>
             <div class="archive-summary">
@@ -229,44 +205,35 @@ async function loadArchive() {
     });
 }
 
-function showArchiveDetail(date, data) {
-    // عرض تفاصيل يوم من الأرشيف
-    alert(`📅 ${date}\n\nالشراء: ${data.signals.filter(s=>s.type==='BUY').length}\nالبيع: ${data.signals.filter(s=>s.type==='SELL').length}`);
-}
-
-// ═══ الإحصائيات ═══
 function renderStats(data) {
     const signals = data.signals || [];
     const buys = signals.filter(s => s.type === 'BUY').length;
     const sells = signals.filter(s => s.type === 'SELL').length;
-    const total = signals.length;
     
-    const statsContent = document.getElementById('stats-content');
-    statsContent.innerHTML = `
+    document.getElementById('stats-content').innerHTML = `
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value">${total}</div>
+                <div class="stat-value">${signals.length}</div>
                 <div class="stat-label">إجمالي الإشارات</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" style="background: linear-gradient(90deg, #4ade80, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${buys}</div>
-                <div class="stat-label">🟢 إشارات شراء</div>
+                <div class="stat-label">🟢 شراء</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" style="background: linear-gradient(90deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${sells}</div>
-                <div class="stat-label">🔴 إشارات بيع</div>
+                <div class="stat-label">🔴 بيع</div>
             </div>
         </div>
-        <div style="margin-top: 30px; text-align: center; color: #94a3b8;">
+        <div style="margin-top: 30px; text-align: center; color: #94a3b8; line-height: 2;">
             <p>📊 استراتيجية Backtested</p>
-            <p style="margin-top: 10px;">Profit Factor: <strong style="color: #4ade80;">4.93</strong></p>
+            <p>Profit Factor: <strong style="color: #4ade80;">4.93</strong></p>
             <p>Win Rate: <strong style="color: #4ade80;">48.5%</strong></p>
             <p>متوسط الربح: <strong style="color: #4ade80;">+1.54%</strong></p>
         </div>
     `;
 }
 
-// ═══ التشغيل ═══
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
     setInterval(loadData, 5 * 60 * 1000);

@@ -13,9 +13,9 @@
             <p class="subtitle">إشارات التداول اليومية — السوق السعودي</p>
             
             <div class="tabs">
-                <button class="tab active" onclick="showTab('today')">📅 اليوم</button>
-                <button class="tab" onclick="showTab('archive')">📚 الأرشيف</button>
-                <button class="tab" onclick="showTab('stats')">📊 إحصائيات</button>
+                <button class="tab active" onclick="showTab(event, 'today')">📅 اليوم</button>
+                <button class="tab" onclick="showTab(event, 'archive')">📚 الأرشيف</button>
+                <button class="tab" onclick="showTab(event, 'stats')">📊 إحصائيات</button>
             </div>
             
             <div class="last-update">
@@ -25,7 +25,6 @@
         </header>
 
         <main>
-            <!-- تبويب اليوم -->
             <div id="tab-today" class="tab-content active">
                 <section class="signals-section">
                     <h2>🟢 إشارات الشراء <span id="buy-count" class="count">0</span></h2>
@@ -38,12 +37,10 @@
                 </section>
             </div>
             
-            <!-- تبويب الأرشيف -->
             <div id="tab-archive" class="tab-content">
                 <div id="archive-list"></div>
             </div>
             
-            <!-- تبويب الإحصائيات -->
             <div id="tab-stats" class="tab-content">
                 <div id="stats-content">
                     <div class="empty-state">جاري التحميل...</div>

@@ -1,8 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: 'Tahoma', 'Segoe UI', sans-serif;
@@ -12,10 +8,7 @@ body {
     padding: 20px;
 }
 
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-}
+.container { max-width: 900px; margin: 0 auto; }
 
 header {
     text-align: center;
@@ -36,11 +29,7 @@ h1 {
     background-clip: text;
 }
 
-.subtitle {
-    color: #94a3b8;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-}
+.subtitle { color: #94a3b8; margin-bottom: 20px; font-size: 0.95rem; }
 
 .tabs {
     display: flex;
@@ -75,13 +64,8 @@ h1 {
     color: #fff;
 }
 
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 .last-update {
     display: flex;
@@ -110,9 +94,7 @@ h1 {
     box-shadow: 0 5px 20px rgba(74, 222, 128, 0.4);
 }
 
-.signals-section {
-    margin-bottom: 30px;
-}
+.signals-section { margin-bottom: 30px; }
 
 h2 {
     font-size: 1.3rem;
@@ -142,10 +124,7 @@ h2 {
     font-weight: bold;
 }
 
-.signals-list {
-    display: grid;
-    gap: 12px;
-}
+.signals-list { display: grid; gap: 12px; }
 
 .signal-card {
     background: rgba(255, 255, 255, 0.06);
@@ -155,13 +134,8 @@ h2 {
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.signal-card.buy {
-    border-right: 3px solid #4ade80;
-}
-
-.signal-card.sell {
-    border-right: 3px solid #ef4444;
-}
+.signal-card.buy { border-right: 3px solid #4ade80; }
+.signal-card.sell { border-right: 3px solid #ef4444; }
 
 .signal-card:hover {
     background: rgba(255, 255, 255, 0.12);
@@ -190,9 +164,7 @@ h2 {
     user-select: none;
 }
 
-.symbol-badge:hover {
-    background: rgba(74, 222, 128, 0.3);
-}
+.symbol-badge:hover { background: rgba(74, 222, 128, 0.3); }
 
 .signal-info {
     display: flex;
@@ -201,11 +173,7 @@ h2 {
     text-align: right;
 }
 
-.signal-name {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #fff;
-}
+.signal-name { font-weight: bold; font-size: 1.1rem; color: #fff; }
 
 .signal-details {
     display: flex;
@@ -242,7 +210,6 @@ h2 {
     border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
-/* خطة التداول */
 .trade-plan {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -287,38 +254,26 @@ h2 {
     border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
-/* الأرشيف */
 .archive-item {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     padding: 15px 20px;
     margin-bottom: 10px;
-    cursor: pointer;
     transition: all 0.3s;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.archive-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
+.archive-item:hover { background: rgba(255, 255, 255, 0.1); }
 
-.archive-date {
-    font-weight: bold;
-    color: #22d3ee;
-}
+.archive-date { font-weight: bold; color: #22d3ee; }
 
-.archive-summary {
-    display: flex;
-    gap: 15px;
-    font-size: 0.9rem;
-}
+.archive-summary { display: flex; gap: 15px; font-size: 0.9rem; }
 
 .archive-buy { color: #4ade80; }
 .archive-sell { color: #ef4444; }
 
-/* الإحصائيات */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -343,10 +298,7 @@ h2 {
     background-clip: text;
 }
 
-.stat-label {
-    color: #94a3b8;
-    font-size: 0.9rem;
-}
+.stat-label { color: #94a3b8; font-size: 0.9rem; }
 
 footer {
     text-align: center;
@@ -358,10 +310,7 @@ footer {
     line-height: 1.8;
 }
 
-#disclaimer {
-    margin-top: 8px;
-    color: #fbbf24;
-}
+#disclaimer { margin-top: 8px; color: #fbbf24; }
 
 .toast {
     position: fixed;
@@ -379,26 +328,14 @@ footer {
     z-index: 1000;
 }
 
-.toast.show {
-    opacity: 1;
-}
+.toast.show { opacity: 1; }
 
 @media (max-width: 600px) {
     h1 { font-size: 1.4rem; }
     body { padding: 12px; }
-    .signal-header {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
+    .signal-header { grid-template-columns: 1fr; text-align: center; }
     .signal-info { text-align: center; }
-    .signal-details {
-        justify-content: center;
-    }
-    .trade-plan {
-        grid-template-columns: 1fr;
-    }
-    .tab {
-        padding: 8px 14px;
-        font-size: 0.85rem;
-    }
+    .signal-details { justify-content: center; }
+    .trade-plan { grid-template-columns: 1fr; }
+    .tab { padding: 8px 14px; font-size: 0.85rem; }
 }
