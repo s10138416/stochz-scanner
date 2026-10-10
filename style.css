@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Tahoma', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #4ade80, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: #94a3b8;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.last-update {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    flex-wrap: wrap;
+}
+
+#refresh-btn {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    color: #000;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+#refresh-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(74, 222, 128, 0.4);
+}
+
+.signals-section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.signals-section:first-of-type h2 {
+    background: linear-gradient(90deg, rgba(74, 222, 128, 0.2), transparent);
+    border-right: 4px solid #4ade80;
+}
+
+.signals-section:last-of-type h2 {
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.2), transparent);
+    border-right: 4px solid #ef4444;
+}
+
+.count {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.signals-list {
+    display: grid;
+    gap: 12px;
+}
+
+.signal-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 15px;
+    align-items: center;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.signal-card.buy {
+    border-right: 3px solid #4ade80;
+}
+
+.signal-card.sell {
+    border-right: 3px solid #ef4444;
+}
+
+.signal-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.symbol-badge {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.signal-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
+}
+
+.signal-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.signal-details {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    flex-wrap: wrap;
+}
+
+.z-score {
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.z-score.strong {
+    background: rgba(74, 222, 128, 0.25);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.z-score.medium {
+    background: rgba(251, 191, 36, 0.25);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.z-score.weak {
+    background: rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #64748b;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    line-height: 1.8;
+}
+
+#disclaimer {
+    margin-top: 8px;
+    color: #fbbf24;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 1.4rem; }
+    body { padding: 12px; }
+    .signal-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .signal-info { text-align: center; }
+    .signal-details {
+        justify-content: center;
+    }
+}

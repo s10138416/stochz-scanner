@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StochZ Scanner - السوق السعودي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 StochZ Scanner</h1>
+            <p class="subtitle">إشارات التداول اليومية — السوق السعودي</p>
+            <div class="last-update">
+                <span id="last-update">جاري التحميل...</span>
+                <button id="refresh-btn" onclick="loadData()">🔄 تحديث</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="signals-section">
+                <h2>🟢 إشارات الشراء <span id="buy-count" class="count">0</span></h2>
+                <div id="buy-list" class="signals-list"></div>
+            </section>
+
+            <section class="signals-section">
+                <h2>🔴 إشارات البيع <span id="sell-count" class="count">0</span></h2>
+                <div id="sell-list" class="signals-list"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>💡 النظام يعمل تلقائياً كل يوم (الأحد-الخميس) الساعة 15:35</p>
+            <p id="disclaimer">⚠️ هذا ليس نصيحة استثمارية — استشر مستشاراً مالياً</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
