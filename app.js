@@ -99,6 +99,8 @@ function showTab(event, name) {
         loadArchive();
     } else if (name === 'watchlist') {
         renderWatchlist();
+    } else if (name === 'watchlist') {
+        renderWatchlist();
     }
 }
 
@@ -181,21 +183,7 @@ function createCard(signal, type) {
     
     const name = signal.name_ar || signal.name || signal.symbol;
     const price = signal.price || 0;
-    
-    // حساب Gap Analysis
     const gap = calculateGap(signal);
-    
-    // خطة التداول
-    let stopLoss, tp1, tp2;
-    if (type === 'buy') {
-        stopLoss = gap.stopLoss;
-        tp1 = gap.tp1;
-        tp2 = gap.tp2;
-    } else {
-        stopLoss = gap.stopLoss;
-        tp1 = gap.tp1;
-        tp2 = gap.tp2;
-    }
     
     card.innerHTML = `
         <div class="signal-header">
@@ -213,7 +201,6 @@ function createCard(signal, type) {
             <div class="z-score ${zClass}">Z: ${z.toFixed(2)}</div>
         </div>
         
-        <!-- Gap Analysis Panel -->
         <div class="gap-panel" style="border-right-color: ${gap.readinessColor};">
             <div class="gap-header" style="color: ${gap.readinessColor};">
                 <span class="gap-label">${gap.readinessLabel}</span>
@@ -225,25 +212,23 @@ function createCard(signal, type) {
             </div>
         </div>
         
-        <!-- خطة التداول -->
         <div class="trade-plan">
             <div class="plan-item stop">
                 <span class="label">🛑 وقف</span>
-                <span class="value">${stopLoss}</span>
+                <span class="value">${gap.stopLoss}</span>
             </div>
             <div class="plan-item tp1">
                 <span class="label">🎯 هدف 1</span>
-                <span class="value">${tp1}</span>
+                <span class="value">${gap.tp1}</span>
             </div>
             <div class="plan-item tp2">
                 <span class="label">🎯 هدف 2</span>
-                <span class="value">${tp2}</span>
+                <span class="value">${gap.tp2}</span>
             </div>
         </div>
         
-        <!-- أزرار الإجراءات -->
         <div class="card-actions">
-            <button class="btn-watch" onclick="addToWatchlist(${JSON.stringify(signal).replace(/"/g, '&quot;')})">
+            <button class="btn-watch" onclick='addToWatchlist(${JSON.stringify(signal)})'>
                 👁️ أضف للمتابعة
             </button>
         </div>
