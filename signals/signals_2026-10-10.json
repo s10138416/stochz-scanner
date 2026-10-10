@@ -1,0 +1,96 @@
+{
+  "scan_date": "2026-10-10",
+  "scan_timestamp": "2026-10-10T11:57:00.985609",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 8,
+    "buy_signals": 6,
+    "sell_signals": 2
+  },
+  "signals": [
+    {
+      "symbol": "8010",
+      "name_ar": "التعاونية",
+      "type": "BUY",
+      "date": "2026-10-04",
+      "price": 86.75,
+      "z_osc": -2.573,
+      "lag": 1
+    },
+    {
+      "symbol": "1120",
+      "name_ar": "الراجحي",
+      "type": "BUY",
+      "date": "2026-10-05",
+      "price": 63.1,
+      "z_osc": -2.712,
+      "lag": 2
+    },
+    {
+      "symbol": "4349",
+      "name_ar": "الإنماء ريت الفندقي",
+      "type": "SELL",
+      "date": "2026-10-05",
+      "price": 7.34,
+      "z_osc": 2.081,
+      "lag": 0
+    },
+    {
+      "symbol": "1080",
+      "name_ar": "العربي",
+      "type": "BUY",
+      "date": "2026-10-05",
+      "price": 22.38,
+      "z_osc": -1.695,
+      "lag": 0
+    },
+    {
+      "symbol": "4170",
+      "name_ar": "شمس",
+      "type": "SELL",
+      "date": "2026-10-06",
+      "price": 12.8,
+      "z_osc": 1.68,
+      "lag": 0
+    },
+    {
+      "symbol": "8210",
+      "name_ar": "بوبا العربية",
+      "type": "BUY",
+      "date": "2026-10-05",
+      "price": 144.4,
+      "z_osc": -2.07,
+      "lag": 2
+    },
+    {
+      "symbol": "4005",
+      "name_ar": "رعاية",
+      "type": "BUY",
+      "date": "2026-10-04",
+      "price": 102.0,
+      "z_osc": -1.965,
+      "lag": 2
+    },
+    {
+      "symbol": "4071",
+      "name_ar": "العربية",
+      "type": "BUY",
+      "date": "2026-10-05",
+      "price": 44.94,
+      "z_osc": -1.79,
+      "lag": 2
+    }
+  ]
+}
