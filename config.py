@@ -15,10 +15,17 @@ INDICATOR_PARAMS = {
 }
 
 FILTER_PARAMS = {
-    "buy_z_max": -1.8,
-    "sell_z_min": 1.5,
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
     "max_lag": 2,
     "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04,
 }
 
 DATA_RANGE_DAYS = 180

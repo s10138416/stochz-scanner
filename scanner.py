@@ -66,9 +66,16 @@ def scan_one(client, stock, from_date, to_date):
         d['date'] = pd.to_datetime(d['date'])
         d = d.set_index('date')[['open', 'high', 'low', 'close', 'volume']].astype(float)
 
-        # إضافة المؤشرات المساعدة
         d = enrich_dataframe(d)
+        
+        # ATR
+        high_low = d['high'] - d['low']
+        high_close = (d['high'] - d['close'].shift()).abs()
+        low_close = (d['low'] - d['close'].shift()).abs()
+        tr = pd.concat([high_low, high_close, low_close], axis=1).max(axis=1)
+        d['atr'] = tr.rolling(14).mean()
 
+        # المؤشر الرئيسي
         sk, _ = adaptive_stochastic(
             d,
             min_len=INDICATOR_PARAMS['min_len'],
@@ -84,48 +91,43 @@ def scan_one(client, stock, from_date, to_date):
             return None
 
         last = d.iloc[-1]
+        z_val = sig['z_osc']
 
-        # فلاتر إضافية لإشارات الشراء — انعكاس مؤكد
+        # الفلتر النهائي
         if sig['type'] == 'BUY':
-            is_green = last['close'] > last['open']
-            rsi_rising = last['rsi'] > d['rsi'].iloc[-2] if len(d) > 1 else False
-            vol_ok = last['vol_ratio'] >= 0.8
-            if not (last['rsi'] < 45 and is_green and rsi_rising and vol_ok):
+            if not (FILTER_PARAMS['buy_z_min'] <= z_val <= FILTER_PARAMS['buy_z_max']):
+                return None
+        elif sig['type'] == 'SELL':
+            if not (FILTER_PARAMS['sell_z_min'] <= z_val <= FILTER_PARAMS['sell_z_max']):
                 return None
 
+        if last['vol_ratio'] < FILTER_PARAMS['min_vol_ratio']:
+            return None
+
+        atr_pct = last['atr'] / last['close']
+        if atr_pct > FILTER_PARAMS['max_atr_pct']:
+            return None
+
         sig['rsi'] = round(float(last['rsi']), 1)
-        sig['ema_50'] = round(float(last['ema_50']), 2)
         sig['vol_ratio'] = round(float(last['vol_ratio']), 2)
         sig['atr'] = round(float(last['atr']), 2)
+        sig['atr_pct'] = round(float(atr_pct * 100), 2)
 
-        plan = calculate_trade_plan(last, sig['price'])
-        sig.update(plan)
+        # خطة التداول
+        if sig['type'] == 'BUY':
+            sig['stop_loss'] = round(sig['price'] * (1 - FILTER_PARAMS['stop_pct']), 2)
+            sig['target_1'] = round(sig['price'] * (1 + FILTER_PARAMS['tp1_pct']), 2)
+            sig['target_2'] = round(sig['price'] * (1 + FILTER_PARAMS['tp2_pct']), 2)
+        else:
+            sig['stop_loss'] = round(sig['price'] * (1 + FILTER_PARAMS['stop_pct']), 2)
+            sig['target_1'] = round(sig['price'] * (1 - FILTER_PARAMS['tp1_pct']), 2)
+            sig['target_2'] = round(sig['price'] * (1 - FILTER_PARAMS['tp2_pct']), 2)
 
         sig['symbol'] = stock['symbol']
         sig['name_ar'] = stock['name_ar']
         return sig
     except Exception as e:
         log.debug(f"خطأ في {stock['symbol']}: {e}")
-        return None
-        d = pd.DataFrame(rows)
-        d['date'] = pd.to_datetime(d['date'])
-        d = d.set_index('date')[['open', 'high', 'low', 'close', 'volume']].astype(float)
-        sk, _ = adaptive_stochastic(
-            d,
-            min_len=INDICATOR_PARAMS['min_len'],
-            max_len=INDICATOR_PARAMS['max_len'],
-            er_len=INDICATOR_PARAMS['er_len'],
-            smooth_k=INDICATOR_PARAMS['smooth_k'],
-            smooth_d=INDICATOR_PARAMS['smooth_d'],
-        )
-        zz = fisher_zscore(sk, z_len=INDICATOR_PARAMS['z_len'])
-        sig = detect_latest_signal(d, zz, INDICATOR_PARAMS)
-        if sig:
-            sig['symbol'] = stock['symbol']
-            sig['name_ar'] = stock['name_ar']
-        return sig
-    except Exception as e:
-        log.debug(f"Error {stock['symbol']}: {e}")
         return None
 
 
@@ -134,16 +136,15 @@ def apply_filter(df):
     df['price_date'] = pd.to_datetime(df['date'])
     latest = df['price_date'].max()
     cutoff = latest - timedelta(days=FILTER_PARAMS['days_lookback'])
+    
     filtered = df[
         (df['price_date'] >= cutoff) &
-        (df['lag'] <= FILTER_PARAMS['max_lag']) &
-        (
-            ((df['type'] == 'BUY') & (df['z_osc'] <= FILTER_PARAMS['buy_z_max'])) |
-            ((df['type'] == 'SELL') & (df['z_osc'] >= FILTER_PARAMS['sell_z_min']))
-        )
+        (df['lag'] <= FILTER_PARAMS['max_lag'])
     ].copy()
+    
     filtered = filtered.sort_values('price_date', ascending=False)
     filtered = filtered.drop_duplicates(subset=['symbol'], keep='first')
+    
     filtered['score'] = filtered['z_osc'].abs() - filtered['lag'] * 0.3
     return filtered.sort_values('score', ascending=False)
 
