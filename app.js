@@ -2,12 +2,22 @@ const REPO_URL = 'https://raw.githubusercontent.com/s10138416/stochz-scanner/mai
 let currentData = null;
 
 function showTab(event, name) {
+    // ابحث عن الزر الرئيسي (حتى لو كان النقر على النص أو الإيموجي)
+    const btn = event.target.closest('.tab');
+    if (!btn) return;
+    
+    // إزالة active من كل التبويبات
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     
-    event.target.classList.add('active');
-    document.getElementById(`tab-${name}`).classList.add('active');
+    // تفعيل الزر المحدد
+    btn.classList.add('active');
     
+    // إظهار المحتوى المقابل
+    const content = document.getElementById(`tab-${name}`);
+    if (content) content.classList.add('active');
+    
+    // تحميل الأرشيف عند الحاجة
     if (name === 'archive') {
         loadArchive();
     }
