@@ -339,3 +339,190 @@ footer {
     .trade-plan { grid-template-columns: 1fr; }
     .tab { padding: 8px 14px; font-size: 0.85rem; }
 }
+
+
+/* ═══ Gap Analysis Panel ═══ */
+.gap-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-right: 3px solid #fbbf24;
+}
+
+.gap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.gap-label {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.gap-advice {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.gap-range {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.gap-range-value {
+    font-family: monospace;
+    color: #22d3ee;
+    font-weight: bold;
+}
+
+/* ═══ Card Actions ═══ */
+.card-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-watch {
+    background: rgba(34, 211, 238, 0.15);
+    color: #22d3ee;
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.btn-watch:hover {
+    background: rgba(34, 211, 238, 0.25);
+}
+
+/* ═══ Watchlist ═══ */
+.watchlist-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-mini {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-mini-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #22d3ee;
+    margin-bottom: 5px;
+}
+
+.stat-mini-label {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.watchlist-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px 18px;
+    margin-bottom: 12px;
+    border-right: 3px solid #22d3ee;
+}
+
+.watchlist-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.watchlist-name {
+    font-weight: bold;
+    flex: 1;
+}
+
+.watchlist-status {
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.watchlist-details {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.watchlist-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.btn-buy {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
+.btn-buy:hover {
+    background: rgba(251, 191, 36, 0.3);
+}
+
+.btn-sell {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+.btn-sell:hover {
+    background: rgba(74, 222, 128, 0.3);
+}
+
+.btn-remove {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.btn-remove:hover {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 600px) {
+    .watchlist-stats {
+        grid-template-columns: 1fr;
+    }
+    .gap-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

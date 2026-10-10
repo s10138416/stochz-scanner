@@ -16,6 +16,7 @@
                 <button class="tab active" onclick="showTab(event, 'today')">📅 اليوم</button>
                 <button class="tab" onclick="showTab(event, 'archive')">📚 الأرشيف</button>
                 <button class="tab" onclick="showTab(event, 'stats')">📊 إحصائيات</button>
+                <button class="tab" onclick="showTab(event, 'watchlist')">👁️ متابعتي</button>
             </div>
             
             <div class="last-update">
@@ -44,6 +45,12 @@
             <div id="tab-stats" class="tab-content">
                 <div id="stats-content">
                     <div class="empty-state">جاري التحميل...</div>
+                </div>
+            </div>
+            
+            <div id="tab-watchlist" class="tab-content">
+                <div id="watchlist-content">
+                    <div class="empty-state">لا توجد أسهم في المتابعة</div>
                 </div>
             </div>
         </main>

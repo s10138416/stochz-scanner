@@ -1,3 +1,80 @@
+
+// ═══════════════════════════════════════════════════════
+// Gap Analysis
+// ═══════════════════════════════════════════════════════
+
+function calculateGap(signal) {
+    // نستخدم سعر الإشارة كسعر مرجعي
+    const signalPrice = signal.price || 0;
+    const z = signal.z_osc || 0;
+    const lag = signal.lag || 0;
+    const absZ = Math.abs(z);
+    
+    // درجات الجاهزية
+    let readiness = 'medium';
+    let readinessLabel = '⚠️ يحتاج مراقبة';
+    let readinessColor = '#fbbf24';
+    let advice = '';
+    
+    // القوة الأساسية: Z
+    if (absZ >= 2.3 && lag <= 2) {
+        readiness = 'high';
+        readinessLabel = '🟢 جاهز للدخول';
+        readinessColor = '#4ade80';
+        advice = 'إشارة قوية — راقب عند الافتتاح';
+    } else if (absZ >= 1.8 && lag <= 2) {
+        readiness = 'medium';
+        readinessLabel = '🟡 انتظر تأكيد';
+        readinessColor = '#fbbf24';
+        advice = 'انتظر 30 دقيقة بعد الافتتاح';
+    } else {
+        readiness = 'low';
+        readinessLabel = '🔴 حذر';
+        readinessColor = '#ef4444';
+        advice = 'قد تحتاج وقتاً أطول';
+    }
+    
+    // حساب فروقات الأسعار المتوقعة
+    const entryLow = signalPrice * 0.995;  // -0.5%
+    const entryHigh = signalPrice * 1.005; // +0.5%
+    const stopLoss = signal.type === 'BUY' 
+        ? signalPrice * 0.98 
+        : signalPrice * 1.02;
+    const tp1 = signal.type === 'BUY'
+        ? signalPrice * 1.02
+        : signalPrice * 0.98;
+    const tp2 = signal.type === 'BUY'
+        ? signalPrice * 1.04
+        : signalPrice * 0.96;
+    
+    return {
+        readiness,
+        readinessLabel,
+        readinessColor,
+        advice,
+        entryLow: entryLow.toFixed(2),
+        entryHigh: entryHigh.toFixed(2),
+        stopLoss: stopLoss.toFixed(2),
+        tp1: tp1.toFixed(2),
+        tp2: tp2.toFixed(2),
+        signalPrice: signalPrice.toFixed(2)
+    };
+}
+
+function renderGapPanel(signals) {
+    // احسب لكل سهم
+    const analyzed = signals.map(s => ({
+        signal: s,
+        gap: calculateGap(s)
+    }));
+    
+    // رتب: جاهز أولاً، ثم متوسط، ثم حذر
+    const order = { high: 0, medium: 1, low: 2 };
+    analyzed.sort((a, b) => order[a.gap.readiness] - order[b.gap.readiness]);
+    
+    return analyzed;
+}
+
 const REPO_URL = 'https://raw.githubusercontent.com/s10138416/stochz-scanner/main/signals';
 let currentData = null;
 
@@ -20,6 +97,8 @@ function showTab(event, name) {
     // تحميل الأرشيف عند الحاجة
     if (name === 'archive') {
         loadArchive();
+    } else if (name === 'watchlist') {
+        renderWatchlist();
     }
 }
 
@@ -103,15 +182,19 @@ function createCard(signal, type) {
     const name = signal.name_ar || signal.name || signal.symbol;
     const price = signal.price || 0;
     
+    // حساب Gap Analysis
+    const gap = calculateGap(signal);
+    
+    // خطة التداول
     let stopLoss, tp1, tp2;
     if (type === 'buy') {
-        stopLoss = (price * 0.98).toFixed(2);
-        tp1 = (price * 1.02).toFixed(2);
-        tp2 = (price * 1.04).toFixed(2);
+        stopLoss = gap.stopLoss;
+        tp1 = gap.tp1;
+        tp2 = gap.tp2;
     } else {
-        stopLoss = (price * 1.02).toFixed(2);
-        tp1 = (price * 0.98).toFixed(2);
-        tp2 = (price * 0.96).toFixed(2);
+        stopLoss = gap.stopLoss;
+        tp1 = gap.tp1;
+        tp2 = gap.tp2;
     }
     
     card.innerHTML = `
@@ -129,6 +212,20 @@ function createCard(signal, type) {
             </div>
             <div class="z-score ${zClass}">Z: ${z.toFixed(2)}</div>
         </div>
+        
+        <!-- Gap Analysis Panel -->
+        <div class="gap-panel" style="border-right-color: ${gap.readinessColor};">
+            <div class="gap-header" style="color: ${gap.readinessColor};">
+                <span class="gap-label">${gap.readinessLabel}</span>
+                <span class="gap-advice">${gap.advice}</span>
+            </div>
+            <div class="gap-range">
+                <span class="gap-range-label">نطاق الدخول الآمن:</span>
+                <span class="gap-range-value">${gap.entryLow} - ${gap.entryHigh} ريال</span>
+            </div>
+        </div>
+        
+        <!-- خطة التداول -->
         <div class="trade-plan">
             <div class="plan-item stop">
                 <span class="label">🛑 وقف</span>
@@ -142,6 +239,13 @@ function createCard(signal, type) {
                 <span class="label">🎯 هدف 2</span>
                 <span class="value">${tp2}</span>
             </div>
+        </div>
+        
+        <!-- أزرار الإجراءات -->
+        <div class="card-actions">
+            <button class="btn-watch" onclick="addToWatchlist(${JSON.stringify(signal).replace(/"/g, '&quot;')})">
+                👁️ أضف للمتابعة
+            </button>
         </div>
     `;
     
@@ -248,3 +352,181 @@ document.addEventListener('DOMContentLoaded', () => {
     loadData();
     setInterval(loadData, 5 * 60 * 1000);
 });
+
+
+// ═══════════════════════════════════════════════════════
+// Watchlist — قائمة المتابعة
+// ═══════════════════════════════════════════════════════
+
+function getWatchlist() {
+    const stored = localStorage.getItem('stochz_watchlist');
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveWatchlist(list) {
+    localStorage.setItem('stochz_watchlist', JSON.stringify(list));
+}
+
+function addToWatchlist(signal) {
+    const list = getWatchlist();
+    
+    // تحقق من عدم التكرار
+    if (list.some(s => s.symbol === signal.symbol && s.date === signal.date)) {
+        showToast('⚠️ السهم موجود في المتابعة');
+        return;
+    }
+    
+    // أضف معلومات إضافية
+    const entry = {
+        ...signal,
+        addedAt: new Date().toISOString(),
+        status: 'watching',  // watching, bought, sold
+        buyPrice: null,
+        buyDate: null,
+        note: ''
+    };
+    
+    list.push(entry);
+    saveWatchlist(list);
+    showToast(`✅ تمت إضافة ${signal.symbol} للمتابعة`);
+}
+
+function removeFromWatchlist(symbol, date) {
+    let list = getWatchlist();
+    list = list.filter(s => !(s.symbol === symbol && s.date === date));
+    saveWatchlist(list);
+    showToast(`🗑️ تم الحذف`);
+    renderWatchlist();
+}
+
+function markAsBought(symbol, date) {
+    const list = getWatchlist();
+    const item = list.find(s => s.symbol === symbol && s.date === date);
+    if (item) {
+        const price = prompt(`📝 أدخل سعر الشراء الفعلي لـ ${symbol}:`);
+        if (price) {
+            item.status = 'bought';
+            item.buyPrice = parseFloat(price);
+            item.buyDate = new Date().toISOString();
+            saveWatchlist(list);
+            showToast(`✅ تم تسجيل الشراء بسعر ${price}`);
+            renderWatchlist();
+        }
+    }
+}
+
+function markAsSold(symbol, date) {
+    const list = getWatchlist();
+    const item = list.find(s => s.symbol === symbol && s.date === date);
+    if (item) {
+        const price = prompt(`📝 أدخل سعر البيع الفعلي لـ ${symbol}:`);
+        if (price) {
+            item.status = 'sold';
+            item.sellPrice = parseFloat(price);
+            item.sellDate = new Date().toISOString();
+            const pnl = ((item.sellPrice - item.buyPrice) / item.buyPrice * 100).toFixed(2);
+            item.pnl = pnl;
+            saveWatchlist(list);
+            showToast(`✅ تم تسجيل البيع — ربح/خسارة: ${pnl}%`);
+            renderWatchlist();
+        }
+    }
+}
+
+function renderWatchlist() {
+    const list = getWatchlist();
+    const container = document.getElementById('watchlist-content');
+    
+    if (!container) return;
+    
+    if (list.length === 0) {
+        container.innerHTML = '<div class="empty-state">لا توجد أسهم في المتابعة</div>';
+        return;
+    }
+    
+    // إحصائيات
+    const watching = list.filter(s => s.status === 'watching').length;
+    const bought = list.filter(s => s.status === 'bought').length;
+    const sold = list.filter(s => s.status === 'sold').length;
+    
+    let html = `
+        <div class="watchlist-stats">
+            <div class="stat-mini">
+                <div class="stat-mini-value">${watching}</div>
+                <div class="stat-mini-label">👁️ قيد المراقبة</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value" style="color: #fbbf24;">${bought}</div>
+                <div class="stat-mini-label">💰 مفتوحة</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value" style="color: #4ade80;">${sold}</div>
+                <div class="stat-mini-label">✅ مغلقة</div>
+            </div>
+        </div>
+        <div class="watchlist-items">
+    `;
+    
+    list.reverse().forEach(item => {
+        const statusLabels = {
+            'watching': '👁️ قيد المراقبة',
+            'bought': '💰 صفقة مفتوحة',
+            'sold': '✅ مغلقة'
+        };
+        const statusColors = {
+            'watching': '#22d3ee',
+            'bought': '#fbbf24',
+            'sold': '#4ade80'
+        };
+        
+        let actionButtons = '';
+        if (item.status === 'watching') {
+            actionButtons = `
+                <button class="btn-action btn-buy" onclick="markAsBought('${item.symbol}', '${item.date}')">
+                    💰 سجل شراء
+                </button>
+            `;
+        } else if (item.status === 'bought') {
+            actionButtons = `
+                <button class="btn-action btn-sell" onclick="markAsSold('${item.symbol}', '${item.date}')">
+                    ✅ سجل بيع
+                </button>
+            `;
+        } else if (item.status === 'sold' && item.pnl) {
+            const pnlNum = parseFloat(item.pnl);
+            const pnlColor = pnlNum >= 0 ? '#4ade80' : '#ef4444';
+            actionButtons = `
+                <span style="color: ${pnlColor}; font-weight: bold;">
+                    ${pnlNum >= 0 ? '+' : ''}${item.pnl}%
+                </span>
+            `;
+        }
+        
+        html += `
+            <div class="watchlist-item">
+                <div class="watchlist-header">
+                    <span class="symbol-badge">${item.symbol}</span>
+                    <span class="watchlist-name">${item.name_ar || item.symbol}</span>
+                    <span class="watchlist-status" style="color: ${statusColors[item.status]};">
+                        ${statusLabels[item.status]}
+                    </span>
+                </div>
+                <div class="watchlist-details">
+                    <span>💰 إشارة: ${item.price} ريال</span>
+                    ${item.buyPrice ? `<span>💵 شراء: ${item.buyPrice}</span>` : ''}
+                    ${item.sellPrice ? `<span>💸 بيع: ${item.sellPrice}</span>` : ''}
+                    <span>📅 ${item.date}</span>
+                </div>
+                <div class="watchlist-actions">
+                    ${actionButtons}
+                    <button class="btn-action btn-remove" onclick="removeFromWatchlist('${item.symbol}', '${item.date}')">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
