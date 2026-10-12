@@ -1,5 +1,202 @@
 
 // ═══════════════════════════════════════════════════════
+// نظام الإشعارات — Notifications System
+// ═══════════════════════════════════════════════════════
+
+let notificationsEnabled = false;
+let checkInterval = null;
+
+// طلب صلاحية الإشعارات
+async function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+        console.log('❌ المتصفح لا يدعم الإشعارات');
+        return false;
+    }
+    
+    if (Notification.permission === 'granted') {
+        notificationsEnabled = true;
+        console.log('✅ الإشعارات مفعّلة مسبقاً');
+        return true;
+    }
+    
+    if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        notificationsEnabled = permission === 'granted';
+        return notificationsEnabled;
+    }
+    
+    return false;
+}
+
+// إظهار إشعار
+function showNotification(title, body, options = {}) {
+    if (!notificationsEnabled) return;
+    
+    const defaultOptions = {
+        icon: '📊',
+        badge: '📊',
+        tag: 'stochz-' + Date.now(),
+        requireInteraction: false,
+        ...options
+    };
+    
+    try {
+        const notification = new Notification(title, {
+            body: body,
+            ...defaultOptions
+        });
+        
+        // إغلاق تلقائي بعد 10 ثوان
+        setTimeout(() => notification.close(), 10000);
+        
+        // فتح التطبيق عند النقر
+        notification.onclick = () => {
+            window.focus();
+            notification.close();
+        };
+    } catch (e) {
+        console.log('خطأ في الإشعار:', e);
+    }
+}
+
+// فحص Watchlist وإرسال الإشعارات
+function checkWatchlistForAlerts() {
+    const list = getWatchlist();
+    if (list.length === 0) return;
+    
+    const alertsSent = getAlertsSent();
+    
+    list.forEach(item => {
+        if (item.status !== 'bought') return;
+        
+        const buyPrice = parseFloat(item.buyPrice);
+        if (!buyPrice) return;
+        
+        const gap = calculateGap(item);
+        const stopLoss = parseFloat(gap.stopLoss);
+        const tp1 = parseFloat(gap.tp1);
+        const tp2 = parseFloat(gap.tp2);
+        
+        const alertKey = `${item.symbol}-${item.date}`;
+        
+        // 1. تنبيه اقتراب من الهدف 1
+        const distToTp1 = ((tp1 - buyPrice) / buyPrice * 100).toFixed(2);
+        if (distToTp1 <= 0.3 && !alertsSent[`${alertKey}-tp1`]) {
+            showNotification(
+                `🎯 ${item.symbol} قريب من الهدف 1`,
+                `${item.name_ar || item.symbol}
+السعر: ${buyPrice} → الهدف: ${tp1}`,
+                { tag: `${alertKey}-tp1` }
+            );
+            alertsSent[`${alertKey}-tp1`] = Date.now();
+        }
+        
+        // 2. تنبيه اقتراب من الهدف 2
+        const distToTp2 = ((tp2 - buyPrice) / buyPrice * 100).toFixed(2);
+        if (distToTp2 <= 0.3 && !alertsSent[`${alertKey}-tp2`]) {
+            showNotification(
+                `🏆 ${item.symbol} قريب من الهدف 2`,
+                `${item.name_ar || item.symbol}
+السعر: ${buyPrice} → الهدف: ${tp2}`,
+                { tag: `${alertKey}-tp2` }
+            );
+            alertsSent[`${alertKey}-tp2`] = Date.now();
+        }
+        
+        // 3. تنبيه اقتراب من الوقف
+        const distToStop = ((buyPrice - stopLoss) / buyPrice * 100).toFixed(2);
+        if (distToStop <= 0.3 && !alertsSent[`${alertKey}-stop`]) {
+            showNotification(
+                `⚠️ ${item.symbol} قريب من الوقف`,
+                `${item.name_ar || item.symbol}
+السعر: ${buyPrice} → الوقف: ${stopLoss}`,
+                { tag: `${alertKey}-stop` }
+            );
+            alertsSent[`${alertKey}-stop`] = Date.now();
+        }
+    });
+    
+    saveAlertsSent(alertsSent);
+}
+
+// تخزين التنبيهات المُرسلة
+function getAlertsSent() {
+    const stored = localStorage.getItem('stochz_alerts_sent');
+    if (!stored) return {};
+    
+    const data = JSON.parse(stored);
+    const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+    
+    // احتفظ فقط بتنbيهات آخر 24 ساعة
+    const filtered = {};
+    Object.keys(data).forEach(key => {
+        if (data[key] > oneDayAgo) filtered[key] = data[key];
+    });
+    
+    return filtered;
+}
+
+function saveAlertsSent(alerts) {
+    localStorage.setItem('stochz_alerts_sent', JSON.stringify(alerts));
+}
+
+// بدء فحص دوري
+function startNotificationChecks() {
+    if (checkInterval) clearInterval(checkInterval);
+    
+    // فحص كل 5 دقائق
+    checkInterval = setInterval(() => {
+        checkWatchlistForAlerts();
+    }, 5 * 60 * 1000);
+    
+    // فحص أولي بعد 10 ثوان
+    setTimeout(checkWatchlistForAlerts, 10000);
+    
+    console.log('✅ بدء فحص Watchlist كل 5 دقائق');
+}
+
+// زر تفعيل الإشعارات
+function toggleNotifications() {
+    const btn = document.getElementById('notification-toggle');
+    const status = document.getElementById('notification-status');
+    
+    if (notificationsEnabled) {
+        notificationsEnabled = false;
+        if (checkInterval) clearInterval(checkInterval);
+        if (status) status.textContent = '🔕 معطّلة';
+        if (btn) btn.textContent = '🔔 تفعيل الإشعارات';
+        showToast('🔕 تم تعطيل الإشعارات');
+    } else {
+        requestNotificationPermission().then(enabled => {
+            if (enabled) {
+                if (status) status.textContent = '🔔 مفعّلة';
+                if (btn) btn.textContent = '🔕 تعطيل الإشعارات';
+                showToast('🔔 تم تفعيل الإشعارات');
+                startNotificationChecks();
+                checkWatchlistForAlerts();
+            } else {
+                showToast('❌ لم يتم منح الصلاحية');
+            }
+        });
+    }
+}
+
+// زر اختبار الإشعارات
+function testNotification() {
+    if (!notificationsEnabled) {
+        showToast('❌ الإشعارات معطّلة — فعّلها أولاً');
+        return;
+    }
+    
+    showNotification(
+        '🎉 اختبار الإشعارات',
+        'إذا رأيت هذه الرسالة، الإشعارات تعمل بشكل صحيح!',
+        { tag: 'test-' + Date.now() }
+    );
+}
+
+
+// ═══════════════════════════════════════════════════════
 // Gap Analysis
 // ═══════════════════════════════════════════════════════
 
@@ -339,7 +536,31 @@ function renderStats(data) {
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
     setInterval(loadData, 5 * 60 * 1000);
+    
+    // الإشعارات — حالة محفوظة
+    const wasEnabled = localStorage.getItem('stochz_notifications') === 'enabled';
+    if (wasEnabled && Notification.permission === 'granted') {
+        notificationsEnabled = true;
+        const btn = document.getElementById('notification-toggle');
+        const status = document.getElementById('notification-status');
+        if (btn) btn.textContent = '🔕 تعطيل الإشعارات';
+        if (status) status.textContent = '🔔 مفعّلة';
+        if (status) status.classList.add('enabled');
+        startNotificationChecks();
+    }
 });
+
+// حفظ حالة الإشعارات
+const originalRequestPermission = requestNotificationPermission;
+requestNotificationPermission = async function() {
+    const result = await originalRequestPermission();
+    if (result) {
+        localStorage.setItem('stochz_notifications', 'enabled');
+    } else {
+        localStorage.removeItem('stochz_notifications');
+    }
+    return result;
+};
 
 
 // ═══════════════════════════════════════════════════════
@@ -397,8 +618,21 @@ function markAsBought(symbol, date) {
             item.buyPrice = parseFloat(price);
             item.buyDate = new Date().toISOString();
             saveWatchlist(list);
-            showToast(`✅ تم تسجيل الشراء بسعر ${price}`);
+            showToast(`✅ تم تسجيل الشراء بسعر ${price} — سنتابع السعر`);
             renderWatchlist();
+            
+            // إشعار تأكيد
+            if (notificationsEnabled) {
+                showNotification(
+                    `💰 تم تسجيل ${symbol}`,
+                    `${item.name_ar || symbol}\nسعر الشراء: ${price}\nسننبّهك عند الهدف أو الوقف`
+                );
+            }
+            
+            // بدء الفحص
+            if (notificationsEnabled) {
+                startNotificationChecks();
+            }
         }
     }
 }

@@ -23,7 +23,20 @@
             <div class="last-update">
                 <span id="last-update">جاري التحميل...</span>
                 <button id="refresh-btn" onclick="loadData()">🔄 تحديث</button>
+            
+            <div class="notification-panel">
+                <div class="notification-row">
+                    <span class="notification-label">الإشعارات:</span>
+                    <span id="notification-status" class="notification-status">🔕 معطّلة</span>
+                    <button id="notification-toggle" class="btn-notification" onclick="toggleNotifications()">
+                        🔔 تفعيل الإشعارات
+                    </button>
+                    <button class="btn-test-notification" onclick="testNotification()" title="اختبار">
+                        🧪
+                    </button>
+                </div>
             </div>
+</div>
         </header>
 
         <main>
