@@ -1,0 +1,78 @@
+{
+  "scan_date": "2026-10-12",
+  "scan_timestamp": "2026-10-12T06:15:19.386308",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 6,
+    "buy_signals": 3,
+    "sell_signals": 3
+  },
+  "signals": [
+    {
+      "symbol": "1832",
+      "name_ar": "صدر",
+      "type": "SELL",
+      "date": "2026-10-07",
+      "price": 2.58,
+      "z_osc": 2.011,
+      "lag": 0
+    },
+    {
+      "symbol": "8100",
+      "name_ar": "سايكو",
+      "type": "SELL",
+      "date": "2026-10-07",
+      "price": 9.99,
+      "z_osc": 1.877,
+      "lag": 0
+    },
+    {
+      "symbol": "4020",
+      "name_ar": "العقارية",
+      "type": "SELL",
+      "date": "2026-10-07",
+      "price": 15.48,
+      "z_osc": 1.672,
+      "lag": 0
+    },
+    {
+      "symbol": "1080",
+      "name_ar": "العربي",
+      "type": "BUY",
+      "date": "2026-10-05",
+      "price": 22.38,
+      "z_osc": -2.12,
+      "lag": 2
+    },
+    {
+      "symbol": "2070",
+      "name_ar": "الدوائية",
+      "type": "BUY",
+      "date": "2026-10-06",
+      "price": 30.82,
+      "z_osc": -1.767,
+      "lag": 2
+    },
+    {
+      "symbol": "4071",
+      "name_ar": "العربية",
+      "type": "BUY",
+      "date": "2026-10-05",
+      "price": 44.94,
+      "z_osc": -1.758,
+      "lag": 2
+    }
+  ]
+}
