@@ -231,6 +231,9 @@ function createCard(signal, type) {
             <button class="btn-watch" onclick='addToWatchlist(${JSON.stringify(signal)})'>
                 👁️ أضف للمتابعة
             </button>
+            <button class="btn-confirm" onclick='openConfirmDialog(${JSON.stringify(signal)})'>
+                ✅ تأكيد الدخول
+            </button>
         </div>
     `;
     
