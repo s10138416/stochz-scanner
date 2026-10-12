@@ -515,3 +515,233 @@ function renderWatchlist() {
     html += '</div>';
     container.innerHTML = html;
 }
+
+
+// ═══════════════════════════════════════════════════════
+// تأكيد الدخول (Confirm Entry)
+// ═══════════════════════════════════════════════════════
+
+function openConfirmDialogFromButton(btn) {
+    const signal = JSON.parse(btn.dataset.signal);
+    openConfirmDialog(signal);
+}
+
+function openConfirmDialog(signal) {
+    const gap = calculateGap(signal);
+    const type = signal.type || 'BUY';
+    const typeAr = type === 'BUY' ? 'شراء' : 'بيع';
+    const typeColor = type === 'BUY' ? '#4ade80' : '#ef4444';
+    
+    // احسب النطاق
+    const price = signal.price || 0;
+    const entryLow = parseFloat(gap.entryLow);
+    const entryHigh = parseFloat(gap.entryHigh);
+    
+    // احذف أي dialog قديم
+    const oldDialog = document.getElementById('confirm-dialog');
+    if (oldDialog) oldDialog.remove();
+    
+    const dialog = document.createElement('div');
+    dialog.id = 'confirm-dialog';
+    dialog.className = 'dialog-overlay';
+    
+    dialog.innerHTML = `
+        <div class="dialog-box">
+            <div class="dialog-header">
+                <h3>
+                    <span class="symbol-badge">${signal.symbol}</span>
+                    ${signal.name_ar || signal.symbol}
+                </h3>
+                <span class="dialog-type" style="color: ${typeColor};">
+                    ${typeAr} — Z: ${signal.z_osc.toFixed(2)}
+                </span>
+            </div>
+            
+            <div class="dialog-info">
+                <div class="info-row">
+                    <span>💰 السعر المرجعي:</span>
+                    <strong>${price} ريال</strong>
+                </div>
+                <div class="info-row">
+                    <span>🎯 نطاق الدخول:</span>
+                    <strong>${entryLow} - ${entryHigh} ريال</strong>
+                </div>
+                <div class="info-row">
+                    <span>🛑 وقف الخسارة:</span>
+                    <strong style="color: #ef4444;">${gap.stopLoss} ريال</strong>
+                </div>
+                <div class="info-row">
+                    <span>🎯 الهدف 1:</span>
+                    <strong style="color: #fbbf24;">${gap.tp1} ريال</strong>
+                </div>
+                <div class="info-row">
+                    <span>🎯 الهدف 2:</span>
+                    <strong style="color: #4ade80;">${gap.tp2} ريال</strong>
+                </div>
+            </div>
+            
+            <div class="dialog-input">
+                <label>📝 أدخل السعر الحالي في السوق:</label>
+                <input type="number" id="current-price" step="0.01" placeholder="مثال: ${price}">
+            </div>
+            
+            <div class="dialog-actions">
+                <button class="btn-dialog-primary" onclick="checkPrice('${signal.symbol}')">
+                    ✅ تحقق
+                </button>
+                <button class="btn-dialog-secondary" onclick="closeConfirmDialog()">
+                    إلغاء
+                </button>
+            </div>
+            
+            <div id="confirm-result"></div>
+        </div>
+    `;
+    
+    document.body.appendChild(dialog);
+    
+    // اربط البيانات
+    dialog.dataset.signal = JSON.stringify(signal);
+    
+    // ركّز على input
+    setTimeout(() => {
+        document.getElementById('current-price').focus();
+    }, 100);
+}
+
+function checkPrice(symbol) {
+    const dialog = document.getElementById('confirm-dialog');
+    const signal = JSON.parse(dialog.dataset.signal);
+    const input = document.getElementById('current-price');
+    const result = document.getElementById('confirm-result');
+    
+    const currentPrice = parseFloat(input.value);
+    if (!currentPrice || currentPrice <= 0) {
+        result.innerHTML = `
+            <div class="result-box result-warning">
+                ⚠️ الرجاء إدخال سعر صحيح
+            </div>
+        `;
+        return;
+    }
+    
+    const gap = calculateGap(signal);
+    const entryLow = parseFloat(gap.entryLow);
+    const entryHigh = parseFloat(gap.entryHigh);
+    const stopLoss = parseFloat(gap.stopLoss);
+    const tp1 = parseFloat(gap.tp1);
+    const tp2 = parseFloat(gap.tp2);
+    const referencePrice = signal.price;
+    const type = signal.type || 'BUY';
+    
+    let decision, decisionColor, decisionIcon, decisionText;
+    
+    if (type === 'BUY') {
+        // للشراء
+        if (currentPrice >= entryLow && currentPrice <= entryHigh) {
+            decision = 'enter';
+            decisionColor = '#4ade80';
+            decisionIcon = '✅';
+            decisionText = 'ادخل الآن — السعر داخل النطاق';
+        } else if (currentPrice < entryLow) {
+            decision = 'wait';
+            decisionColor = '#fbbf24';
+            decisionIcon = '⏳';
+            decisionText = 'انتظر — السعر أقل من نطاق الدخول';
+        } else {
+            // currentPrice > entryHigh
+            if (currentPrice < tp1) {
+                decision = 'wait';
+                decisionColor = '#fbbf24';
+                decisionIcon = '⚠️';
+                decisionText = 'السعر مرتفع — قد يكون فات الأوان';
+            } else {
+                decision = 'ignore';
+                decisionColor = '#ef4444';
+                decisionIcon = '🛑';
+                decisionText = 'تجاهل — السعر تجاوز الهدف 1';
+            }
+        }
+    } else {
+        // للبيع (معكوس)
+        if (currentPrice >= entryLow && currentPrice <= entryHigh) {
+            decision = 'enter';
+            decisionColor = '#4ade80';
+            decisionIcon = '✅';
+            decisionText = 'ادخل الآن — السعر داخل النطاق';
+        } else if (currentPrice > entryHigh) {
+            decision = 'wait';
+            decisionColor = '#fbbf24';
+            decisionIcon = '⏳';
+            decisionText = 'انتظر — السعر أعلى من نطاق الدخول';
+        } else {
+            if (currentPrice > tp1) {
+                decision = 'wait';
+                decisionColor = '#fbbf24';
+                decisionIcon = '⚠️';
+                decisionText = 'السعر منخفض — قد يكون فات الأوان';
+            } else {
+                decision = 'ignore';
+                decisionColor = '#ef4444';
+                decisionIcon = '🛑';
+                decisionText = 'تجاهل — السعر تجاوز الهدف 1';
+            }
+        }
+    }
+    
+    // حساب المسافات
+    const diffFromSignal = ((currentPrice - referencePrice) / referencePrice * 100).toFixed(2);
+    const distToStop = ((currentPrice - stopLoss) / currentPrice * 100).toFixed(2);
+    const distToTp1 = ((tp1 - currentPrice) / currentPrice * 100).toFixed(2);
+    
+    result.innerHTML = `
+        <div class="result-box" style="border-color: ${decisionColor}; background: ${decisionColor}15;">
+            <div class="result-decision" style="color: ${decisionColor};">
+                ${decisionIcon} ${decisionText}
+            </div>
+            
+            <div class="result-details">
+                <div class="result-detail">
+                    <span>السعر المُدخل:</span>
+                    <strong>${currentPrice} ريال</strong>
+                </div>
+                <div class="result-detail">
+                    <span>الفرق عن الإشارة:</span>
+                    <strong style="color: ${Math.abs(diffFromSignal) < 1 ? '#4ade80' : '#fbbf24'};">
+                        ${diffFromSignal >= 0 ? '+' : ''}${diffFromSignal}%
+                    </strong>
+                </div>
+                <div class="result-detail">
+                    <span>المسافة للوقف:</span>
+                    <strong style="color: #ef4444;">${distToStop}%</strong>
+                </div>
+                <div class="result-detail">
+                    <span>المسافة للهدف 1:</span>
+                    <strong style="color: #fbbf24;">${distToTp1}%</strong>
+                </div>
+            </div>
+            
+            ${decision === 'enter' ? `
+                <button class="btn-dialog-success" onclick="quickAddToWatchlist('${symbol}')">
+                    👁️ أضف للمتابعة
+                </button>
+            ` : ''}
+        </div>
+    `;
+}
+
+function closeConfirmDialog() {
+    const dialog = document.getElementById('confirm-dialog');
+    if (dialog) dialog.remove();
+}
+
+function quickAddToWatchlist(symbol) {
+    // ابحث عن السهم في currentData
+    if (currentData && currentData.signals) {
+        const signal = currentData.signals.find(s => s.symbol === symbol);
+        if (signal) {
+            addToWatchlist(signal);
+            closeConfirmDialog();
+        }
+    }
+}

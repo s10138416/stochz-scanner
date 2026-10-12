@@ -17,6 +17,7 @@
                 <button class="tab" onclick="showTab(event, 'archive')">📚 الأرشيف</button>
                 <button class="tab" onclick="showTab(event, 'stats')">📊 إحصائيات</button>
                 <button class="tab" onclick="showTab(event, 'watchlist')">👁️ متابعتي</button>
+                <button class="tab" onclick="showTab(event, 'confirm')">✅ تأكيد الدخول</button>
             </div>
             
             <div class="last-update">
@@ -51,6 +52,12 @@
             <div id="tab-watchlist" class="tab-content">
                 <div id="watchlist-content">
                     <div class="empty-state">لا توجد أسهم في المتابعة</div>
+                </div>
+            </div>
+            
+            <div id="tab-confirm" class="tab-content">
+                <div id="confirm-content">
+                    <div class="empty-state">📋 اختر سهماً من الإشارات الحالية<br>لتأكيد الدخول</div>
                 </div>
             </div>
         </main>
