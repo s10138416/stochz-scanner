@@ -826,3 +826,73 @@ footer {
 .btn-test-notification:hover {
     background: rgba(34, 211, 238, 0.25);
 }
+
+
+/* ═══ Notification Help Dialog ═══ */
+.help-steps {
+    padding: 15px 20px 15px 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    line-height: 2;
+    color: #cbd5e1;
+    counter-reset: step;
+}
+
+.help-steps li {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.help-steps li::marker {
+    color: #4ade80;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.help-steps strong {
+    color: #22d3ee;
+    background: rgba(34, 211, 238, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.copy-code {
+    display: inline-block;
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    word-break: break-all;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.copy-code:hover {
+    background: rgba(74, 222, 128, 0.25);
+}
+
+.copy-code:active {
+    transform: scale(0.98);
+}
+
+.help-steps .red {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.help-steps .green {
+    color: #4ade80;
+    font-weight: bold;
+}
+
+.help-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}

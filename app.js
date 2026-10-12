@@ -164,21 +164,124 @@ function toggleNotifications() {
         notificationsEnabled = false;
         if (checkInterval) clearInterval(checkInterval);
         if (status) status.textContent = '🔕 معطّلة';
-        if (btn) btn.textContent = '🔔 تفعيل الإشعارات';
+        if (btn) btn.textContent = '🔔 تفعيل';
+        localStorage.removeItem('stochz_notifications');
         showToast('🔕 تم تعطيل الإشعارات');
-    } else {
-        requestNotificationPermission().then(enabled => {
-            if (enabled) {
-                if (status) status.textContent = '🔔 مفعّلة';
-                if (btn) btn.textContent = '🔕 تعطيل الإشعارات';
-                showToast('🔔 تم تفعيل الإشعارات');
-                startNotificationChecks();
-                checkWatchlistForAlerts();
-            } else {
-                showToast('❌ لم يتم منح الصلاحية');
-            }
-        });
+        return;
     }
+    
+    // إذا كانت الصلاحية مرفوضة سابقاً
+    if (Notification.permission === 'denied') {
+        showNotificationHelp();
+        return;
+    }
+    
+    // اطلب الصلاحية
+    requestNotificationPermission().then(enabled => {
+        if (enabled) {
+            if (status) {
+                status.textContent = '🔔 مفعّلة';
+                status.style.color = '#4ade80';
+            }
+            if (btn) btn.textContent = '🔕 تعطيل';
+            localStorage.setItem('stochz_notifications', 'enabled');
+            showToast('🔔 تم تفعيل الإشعارات');
+            startNotificationChecks();
+        } else {
+            showNotificationHelp();
+        }
+    });
+}
+
+function showNotificationHelp() {
+    // احذف النافذة القديمة إن وُجدت
+    const old = document.getElementById('notification-help');
+    if (old) old.remove();
+    
+    const dialog = document.createElement('div');
+    dialog.id = 'notification-help';
+    dialog.className = 'dialog-overlay';
+    
+    const isChrome = navigator.userAgent.includes('Chrome');
+    const isEdge = navigator.userAgent.includes('Edg');
+    const isFirefox = navigator.userAgent.includes('Firefox');
+    const isSafari = navigator.userAgent.includes('Safari') && !isChrome;
+    
+    let stepsHTML = '';
+    
+    if (isChrome) {
+        stepsHTML = `
+            <ol class="help-steps">
+                <li>انسخ هذا الرابط:<br><code class="copy-code">chrome://settings/content/notifications</code></li>
+                <li>الصقه في شريط العنوان و اضغط Enter</li>
+                <li>ابحث عن <strong>s10138416.github.io</strong></li>
+                <li>إذا كان في <span class="red">"Not allowed"</span> → احذفه</li>
+                <li>أضفه إلى <span class="green">"Allowed"</span></li>
+                <li>أعد تحميل التطبيق</li>
+            </ol>
+        `;
+    } else if (isEdge) {
+        stepsHTML = `
+            <ol class="help-steps">
+                <li>انسخ:<br><code class="copy-code">edge://settings/content/notifications</code></li>
+                <li>الصقه في العنوان واضغط Enter</li>
+                <li>أضف <strong>s10138416.github.io</strong> إلى Allow</li>
+                <li>أعد تحميل التطبيق</li>
+            </ol>
+        `;
+    } else if (isFirefox) {
+        stepsHTML = `
+            <ol class="help-steps">
+                <li>انسخ:<br><code class="copy-code">about:preferences#privacy</code></li>
+                <li>اذهب إلى Notifications → Settings</li>
+                <li>اسمح للموقع <strong>s10138416.github.io</strong></li>
+            </ol>
+        `;
+    } else if (isSafari) {
+        stepsHTML = `
+            <ol class="help-steps">
+                <li>افتح Safari → Preferences</li>
+                <li>اذهب إلى Websites → Notifications</li>
+                <li>اسمح للموقع <strong>s10138416.github.io</strong></li>
+            </ol>
+        `;
+    } else {
+        stepsHTML = `
+            <ol class="help-steps">
+                <li>افتح إعدادات المتصفح</li>
+                <li>ابحث عن Notifications</li>
+                <li>اسمح للموقع <strong>s10138416.github.io</strong></li>
+            </ol>
+        `;
+    }
+    
+    dialog.innerHTML = `
+        <div class="dialog-box">
+            <div class="dialog-header">
+                <h3>🔔 تفعيل الإشعارات</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 8px;">
+                    الإشعارات محجوبة من إعدادات المتصفح
+                </p>
+            </div>
+            
+            ${stepsHTML}
+            
+            <div class="help-actions">
+                <button class="btn-dialog-secondary" onclick="document.getElementById('notification-help').remove()">
+                    إغلاق
+                </button>
+                <button class="btn-dialog-primary" onclick="reloadPage()">
+                    🔄 إعادة تحميل التطبيق
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(dialog);
+}
+
+function reloadPage() {
+    location.reload(true);
 }
 
 // زر اختبار الإشعارات
