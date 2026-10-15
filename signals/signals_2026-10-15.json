@@ -1,0 +1,33 @@
+{
+  "scan_date": "2026-10-15",
+  "scan_timestamp": "2026-10-15T15:19:55.041002",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 1,
+    "buy_signals": 1,
+    "sell_signals": 0
+  },
+  "signals": [
+    {
+      "symbol": "1080",
+      "name_ar": "العربي",
+      "type": "BUY",
+      "date": "2026-10-12",
+      "price": 21.14,
+      "z_osc": -2.735,
+      "lag": 0
+    }
+  ]
+}
