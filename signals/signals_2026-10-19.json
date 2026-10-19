@@ -1,0 +1,114 @@
+{
+  "scan_date": "2026-10-19",
+  "scan_timestamp": "2026-10-19T17:11:02.461982",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 10,
+    "buy_signals": 8,
+    "sell_signals": 2
+  },
+  "signals": [
+    {
+      "symbol": "1182",
+      "name_ar": "أملاك",
+      "type": "SELL",
+      "date": "2026-10-13",
+      "price": 9.03,
+      "z_osc": 2.925,
+      "lag": 0
+    },
+    {
+      "symbol": "4324",
+      "name_ar": "بنان",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 2.84,
+      "z_osc": -2.505,
+      "lag": 0
+    },
+    {
+      "symbol": "4292",
+      "name_ar": "عطاء",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 34.0,
+      "z_osc": -2.437,
+      "lag": 1
+    },
+    {
+      "symbol": "4016",
+      "name_ar": "أفالون فارما",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 61.5,
+      "z_osc": -2.433,
+      "lag": 1
+    },
+    {
+      "symbol": "1324",
+      "name_ar": "صالح الراشد",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 37.24,
+      "z_osc": -2.095,
+      "lag": 0
+    },
+    {
+      "symbol": "2290",
+      "name_ar": "ينساب",
+      "type": "SELL",
+      "date": "2026-10-13",
+      "price": 33.4,
+      "z_osc": 1.822,
+      "lag": 0
+    },
+    {
+      "symbol": "3060",
+      "name_ar": "أسمنت ينبع",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 13.74,
+      "z_osc": -1.694,
+      "lag": 0
+    },
+    {
+      "symbol": "4262",
+      "name_ar": "لومي",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 20.49,
+      "z_osc": -1.783,
+      "lag": 1
+    },
+    {
+      "symbol": "4146",
+      "name_ar": "جاز",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 14.74,
+      "z_osc": -1.649,
+      "lag": 1
+    },
+    {
+      "symbol": "4250",
+      "name_ar": "جبل عمر",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 15.85,
+      "z_osc": -1.611,
+      "lag": 1
+    }
+  ]
+}
