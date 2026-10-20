@@ -1,0 +1,105 @@
+{
+  "scan_date": "2026-10-20",
+  "scan_timestamp": "2026-10-20T15:22:29.935673",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 9,
+    "buy_signals": 9,
+    "sell_signals": 0
+  },
+  "signals": [
+    {
+      "symbol": "4324",
+      "name_ar": "بنان",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 2.84,
+      "z_osc": -2.505,
+      "lag": 0
+    },
+    {
+      "symbol": "7211",
+      "name_ar": "عزم",
+      "type": "BUY",
+      "date": "2026-10-18",
+      "price": 28.36,
+      "z_osc": -2.155,
+      "lag": 0
+    },
+    {
+      "symbol": "4020",
+      "name_ar": "العقارية",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 13.78,
+      "z_osc": -2.303,
+      "lag": 1
+    },
+    {
+      "symbol": "2170",
+      "name_ar": "اللجين",
+      "type": "BUY",
+      "date": "2026-10-18",
+      "price": 25.0,
+      "z_osc": -1.847,
+      "lag": 0
+    },
+    {
+      "symbol": "4220",
+      "name_ar": "إعمار",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 8.97,
+      "z_osc": -1.752,
+      "lag": 0
+    },
+    {
+      "symbol": "2020",
+      "name_ar": "سابك للمغذيات الزراعية",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 111.0,
+      "z_osc": -1.728,
+      "lag": 0
+    },
+    {
+      "symbol": "4342",
+      "name_ar": "جدوى ريت السعودية",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 8.0,
+      "z_osc": -1.912,
+      "lag": 1
+    },
+    {
+      "symbol": "4016",
+      "name_ar": "أفالون فارما",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 61.5,
+      "z_osc": -1.754,
+      "lag": 1
+    },
+    {
+      "symbol": "4146",
+      "name_ar": "جاز",
+      "type": "BUY",
+      "date": "2026-10-15",
+      "price": 14.74,
+      "z_osc": -1.712,
+      "lag": 1
+    }
+  ]
+}
