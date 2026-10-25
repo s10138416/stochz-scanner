@@ -1,0 +1,87 @@
+{
+  "scan_date": "2026-10-25",
+  "scan_timestamp": "2026-10-25T14:34:08.030928",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 7,
+    "buy_signals": 2,
+    "sell_signals": 5
+  },
+  "signals": [
+    {
+      "symbol": "6090",
+      "name_ar": "جازادكو",
+      "type": "BUY",
+      "date": "2026-10-21",
+      "price": 6.37,
+      "z_osc": -2.393,
+      "lag": 0
+    },
+    {
+      "symbol": "2330",
+      "name_ar": "المتقدمة",
+      "type": "SELL",
+      "date": "2026-10-21",
+      "price": 24.37,
+      "z_osc": 2.384,
+      "lag": 0
+    },
+    {
+      "symbol": "7040",
+      "name_ar": "قو للإتصالات",
+      "type": "BUY",
+      "date": "2026-10-18",
+      "price": 68.05,
+      "z_osc": -2.931,
+      "lag": 2
+    },
+    {
+      "symbol": "3010",
+      "name_ar": "أسمنت العربية",
+      "type": "SELL",
+      "date": "2026-10-20",
+      "price": 20.26,
+      "z_osc": 2.112,
+      "lag": 0
+    },
+    {
+      "symbol": "4050",
+      "name_ar": "ساسكو",
+      "type": "SELL",
+      "date": "2026-10-19",
+      "price": 41.64,
+      "z_osc": 1.807,
+      "lag": 0
+    },
+    {
+      "symbol": "4001",
+      "name_ar": "أسواق ع العثيم",
+      "type": "SELL",
+      "date": "2026-10-19",
+      "price": 4.2,
+      "z_osc": 1.649,
+      "lag": 0
+    },
+    {
+      "symbol": "2080",
+      "name_ar": "الغاز القابضة",
+      "type": "SELL",
+      "date": "2026-10-18",
+      "price": 60.55,
+      "z_osc": 1.906,
+      "lag": 2
+    }
+  ]
+}
