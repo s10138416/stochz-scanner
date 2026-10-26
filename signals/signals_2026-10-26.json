@@ -1,0 +1,60 @@
+{
+  "scan_date": "2026-10-26",
+  "scan_timestamp": "2026-10-26T16:57:08.198542",
+  "filter": {
+    "buy_z_min": -3.0,
+    "buy_z_max": -1.6,
+    "sell_z_min": 1.6,
+    "sell_z_max": 3.0,
+    "min_vol_ratio": 1.0,
+    "max_atr_pct": 0.05,
+    "max_lag": 2,
+    "days_lookback": 3,
+    "stop_pct": 0.02,
+    "tp1_pct": 0.02,
+    "tp2_pct": 0.04
+  },
+  "summary": {
+    "total_signals": 4,
+    "buy_signals": 1,
+    "sell_signals": 3
+  },
+  "signals": [
+    {
+      "symbol": "2290",
+      "name_ar": "ينساب",
+      "type": "BUY",
+      "date": "2026-10-22",
+      "price": 29.8,
+      "z_osc": -2.634,
+      "lag": 0
+    },
+    {
+      "symbol": "2084",
+      "name_ar": "مياهنا",
+      "type": "SELL",
+      "date": "2026-10-19",
+      "price": 9.73,
+      "z_osc": 1.653,
+      "lag": 0
+    },
+    {
+      "symbol": "3010",
+      "name_ar": "أسمنت العربية",
+      "type": "SELL",
+      "date": "2026-10-20",
+      "price": 20.26,
+      "z_osc": 1.622,
+      "lag": 0
+    },
+    {
+      "symbol": "1323",
+      "name_ar": "يو سي آي سي",
+      "type": "SELL",
+      "date": "2026-10-22",
+      "price": 25.6,
+      "z_osc": 1.705,
+      "lag": 2
+    }
+  ]
+}
